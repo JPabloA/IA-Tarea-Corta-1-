@@ -1,42 +1,43 @@
 import numpy as np
-from Ficha import Ficha
+from Peice import Peice
 
-# Crear una matriz de float
-matrizObjetivo = np.zeros((7, 7),dtype=object)
+# Create a 7x7 matrix to represent the goal state
+goalMatrix = np.zeros((7, 7),dtype=object)
 
-# Crear un diccionario para almacenar las instancias de Ficha
-fichas = {}
+# Create a dictionary to store the instances of Ficha
+pieces_dict = {}
 
-# Llenar las esquinas con -1
-matrizObjetivo[0, 0] = -1
-matrizObjetivo[0, 1] = -1
-matrizObjetivo[0, -1] = -1
-matrizObjetivo[0, -2] = -1
+# Fill the matrix with -1 in the border
+goalMatrix[0, 0] = -1
+goalMatrix[0, 1] = -1
+goalMatrix[0, -1] = -1
+goalMatrix[0, -2] = -1
 
-matrizObjetivo[-1, 0] = -1
-matrizObjetivo[-1, 1] = -1
-matrizObjetivo[-1, -1] = -1
-matrizObjetivo[-1, -2] = -1
+goalMatrix[-1, 0] = -1
+goalMatrix[-1, 1] = -1
+goalMatrix[-1, -1] = -1
+goalMatrix[-1, -2] = -1
 
-matrizObjetivo[1, 0] = -1
-matrizObjetivo[1, 1] = -1
-matrizObjetivo[1, -1] = -1
-matrizObjetivo[1, -2] = -1
+goalMatrix[1, 0] = -1
+goalMatrix[1, 1] = -1
+goalMatrix[1, -1] = -1
+goalMatrix[1, -2] = -1
 
-matrizObjetivo[-2, 1] = -1
-matrizObjetivo[-2, 0] = -1
-matrizObjetivo[-2, -2] = -1
-matrizObjetivo[-2, -1] = -1
+goalMatrix[-2, 1] = -1
+goalMatrix[-2, 0] = -1
+goalMatrix[-2, -2] = -1
+goalMatrix[-2, -1] = -1
 
-# Colocar un 1 en el centro
-matrizObjetivo[3, 3] = 1
+# Fill the matrix with 1 in the center
+goalMatrix[3, 3] = 1
 
-print("Matriz objetivo: \n",matrizObjetivo)
+print("Goal matrix: \n",goalMatrix)
 
-# Asignar instancias de Ficha en un diccionario
-for i in range(matrizObjetivo.shape[0]):
-    for j in range(matrizObjetivo.shape[1]):
-        if matrizObjetivo[i, j] == 0:
-            fichas[(i, j)] = Ficha(i, j)
+# Create the instances of Ficha and store them in the dictionary
+for i in range(goalMatrix.shape[0]):
+    for j in range(goalMatrix.shape[1]):
+        if goalMatrix[i, j] == 0:
+            #Ficha is created with the position (i, j) in the matrix
+            pieces_dict[(i, j)] = Peice(i, j)
 
-print('Fichas: \n',fichas)
+print('Peices in the board: \n',pieces_dict)
