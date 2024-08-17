@@ -17,3 +17,5 @@ game.PrintGame()
 
 game.MakeMove(2, 6, 3, 1)
 game.PrintGame()
+
+print(game.GameDictToMatrix())

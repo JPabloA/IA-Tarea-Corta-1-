@@ -36,7 +36,6 @@ class PegSolitaire:
 
         return matrix
 
-
     def __initializeObjectiveMatrix(self):
         # Create a 7x7 matrix to represent the goal state
         self.goalMatrix = np.zeros((self.GAME_SIZE, self.GAME_SIZE),dtype=object)
@@ -118,3 +117,13 @@ class PegSolitaire:
 
     def GetGameDictionary(self):
         return self.pieces_dict
+
+    # Return a NP matrix based on the current piece dictionary
+    def GameDictToMatrix(self):
+        game_matrix = np.zeros((self.GAME_SIZE, self.GAME_SIZE),dtype=object)
+        self.__initializeMatrixCorners(game_matrix)
+
+        for location in self.pieces_dict:
+            game_matrix[location] = 1
+
+        return game_matrix
