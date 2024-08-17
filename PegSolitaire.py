@@ -12,30 +12,35 @@ class PegSolitaire:
         self.__initializeObjectiveMatrix()
         self.__initializeGameMatrix()
 
+    def __initializeMatrixCorners(self, matrix):
+        # Fill the matrix with -1 in the border
+        matrix[0, 0] = -1
+        matrix[0, 1] = -1
+        matrix[0, -1] = -1
+        matrix[0, -2] = -1
+
+        matrix[-1, 0] = -1
+        matrix[-1, 1] = -1
+        matrix[-1, -1] = -1
+        matrix[-1, -2] = -1
+
+        matrix[1, 0] = -1
+        matrix[1, 1] = -1
+        matrix[1, -1] = -1
+        matrix[1, -2] = -1
+
+        matrix[-2, 1] = -1
+        matrix[-2, 0] = -1
+        matrix[-2, -2] = -1
+        matrix[-2, -1] = -1
+
+        return matrix
+
+
     def __initializeObjectiveMatrix(self):
         # Create a 7x7 matrix to represent the goal state
         self.goalMatrix = np.zeros((self.GAME_SIZE, self.GAME_SIZE),dtype=object)
-
-        # Fill the matrix with -1 in the border
-        self.goalMatrix[0, 0] = -1
-        self.goalMatrix[0, 1] = -1
-        self.goalMatrix[0, -1] = -1
-        self.goalMatrix[0, -2] = -1
-
-        self.goalMatrix[-1, 0] = -1
-        self.goalMatrix[-1, 1] = -1
-        self.goalMatrix[-1, -1] = -1
-        self.goalMatrix[-1, -2] = -1
-
-        self.goalMatrix[1, 0] = -1
-        self.goalMatrix[1, 1] = -1
-        self.goalMatrix[1, -1] = -1
-        self.goalMatrix[1, -2] = -1
-
-        self.goalMatrix[-2, 1] = -1
-        self.goalMatrix[-2, 0] = -1
-        self.goalMatrix[-2, -2] = -1
-        self.goalMatrix[-2, -1] = -1
+        self.goalMatrix = self.__initializeMatrixCorners(self.goalMatrix)
 
         # Fill the matrix with 1 in the center
         self.goalMatrix[3, 3] = 1
@@ -49,29 +54,8 @@ class PegSolitaire:
                     self.pieces_dict[(i, j)] = Piece(i, j)
 
     def PrintGame(self):
-
         temp_matrix = np.zeros((self.GAME_SIZE, self.GAME_SIZE), dtype=object)
-
-        # Fill the matrix with -1 in the border
-        temp_matrix[0, 0] = -1
-        temp_matrix[0, 1] = -1
-        temp_matrix[0, -1] = -1
-        temp_matrix[0, -2] = -1
-
-        temp_matrix[-1, 0] = -1
-        temp_matrix[-1, 1] = -1
-        temp_matrix[-1, -1] = -1
-        temp_matrix[-1, -2] = -1
-
-        temp_matrix[1, 0] = -1
-        temp_matrix[1, 1] = -1
-        temp_matrix[1, -1] = -1
-        temp_matrix[1, -2] = -1
-
-        temp_matrix[-2, 1] = -1
-        temp_matrix[-2, 0] = -1
-        temp_matrix[-2, -2] = -1
-        temp_matrix[-2, -1] = -1
+        temp_matrix = self.__initializeMatrixCorners(temp_matrix)
 
         game_row_str = ""
         for i in range(temp_matrix.shape[0]):
@@ -120,6 +104,14 @@ class PegSolitaire:
         del self.pieces_dict[ (y_from, x_from) ]
         del self.pieces_dict[ (target_y, target_x) ]
         self.pieces_dict[ (y_to, x_to) ] = Piece(y_to, x_to)
+
+    def GetPiecePossibleNextPositions(self, selected_piece: Piece) -> list[tuple[int, int]] :
+        up_location    = (selected_piece.row_index - 2, selected_piece.column_index)
+        down_location  = (selected_piece.row_index + 2, selected_piece.column_index)
+        left_location  = (selected_piece.row_index, selected_piece.column_index - 2)
+        right_location = (selected_piece.row_index, selected_piece.column_index + 2)
+
+        return [ up_location, right_location, down_location, left_location ]
 
     def GetObjetiveMatrix(self):
         return self.goalMatrix
