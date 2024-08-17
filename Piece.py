@@ -1,5 +1,5 @@
 # Represents a piece in the board using the coordinates of the matrix
-class Peice:
+class Piece:
     def __init__(self, row_index, column_index):
         self.row_index = row_index
         self.column_index = column_index
