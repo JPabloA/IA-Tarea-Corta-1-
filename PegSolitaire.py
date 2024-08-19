@@ -1,10 +1,14 @@
 import numpy as np
 from Piece import Piece
 
+PieceLocation = tuple[int, int]
+PieceObject = tuple[PieceLocation, Piece]
+PieceInMap = dict[PieceLocation, Piece]
+
 class PegSolitaire:
 
     # Create a dictionary to store the instances of Ficha
-    pieces_dict: dict[tuple[int, int], Piece] = {}
+    pieces_dict: PieceInMap = {}
 
     GAME_SIZE = 7
 
@@ -52,7 +56,7 @@ class PegSolitaire:
                     #Ficha is created with the position (i, j) in the matrix
                     self.pieces_dict[(i, j)] = Piece(i, j)
 
-    def PrintGame(self):
+    def PrintGame(self, pieces: PieceInMap):
         temp_matrix = np.zeros((self.GAME_SIZE, self.GAME_SIZE), dtype=object)
         temp_matrix = self.__initializeMatrixCorners(temp_matrix)
 
@@ -64,7 +68,7 @@ class PegSolitaire:
                     game_row_str += "  "
                     continue
 
-                if (i, j) in self.pieces_dict:
+                if (i, j) in pieces:
                     game_row_str += "1 "
                 else:
                     game_row_str += "0 "
@@ -72,14 +76,14 @@ class PegSolitaire:
 
         print(game_row_str)
 
-    def MakeMove(self, x_from: int, y_from: int, x_to: int, y_to: int):
+    def MakeMove(self, x_from: int, y_from: int, x_to: int, y_to: int, pieces: PieceInMap):
         # Check if the from location has no piece -> Cant move
-        if (y_from, x_from) not in self.pieces_dict:
+        if (y_from, x_from) not in pieces:
             print("Invalid move: 1")
             return
 
         # Check if the to location has a piece -> Cant move
-        if (y_to, x_to) in self.pieces_dict:
+        if (y_to, x_to) in pieces:
             print("Invalid move: 2")
             return
 
@@ -95,14 +99,16 @@ class PegSolitaire:
         target_y = y_from if y_from == y_to else (y_from + y_to) // 2
 
         # 2. Check if the target location has no piece -> Cant move
-        if (target_y, target_x) not in self.pieces_dict:
+        if (target_y, target_x) not in pieces:
             print("Invalid move: 4")
             return
 
         # 3. Remove the from location, target piece and set the to location
-        del self.pieces_dict[ (y_from, x_from) ]
-        del self.pieces_dict[ (target_y, target_x) ]
-        self.pieces_dict[ (y_to, x_to) ] = Piece(y_to, x_to)
+        del pieces[ (y_from, x_from) ]
+        del pieces[ (target_y, target_x) ]
+        pieces[ (y_to, x_to) ] = Piece(y_to, x_to)
+
+        return pieces
 
     def GetPiecePossibleNextPositions(self, selected_piece: Piece) -> list[tuple[int, int]] :
         up_location    = (selected_piece.row_index - 2, selected_piece.column_index)
@@ -119,11 +125,11 @@ class PegSolitaire:
         return self.pieces_dict
 
     # Return a NP matrix based on the current piece dictionary
-    def GameDictToMatrix(self):
+    def GenerateGameStateMatrix(self, pieces: PieceInMap):
         game_matrix = np.zeros((self.GAME_SIZE, self.GAME_SIZE),dtype=object)
         self.__initializeMatrixCorners(game_matrix)
 
-        for location in self.pieces_dict:
+        for location in pieces:
             game_matrix[location] = 1
 
         return game_matrix
