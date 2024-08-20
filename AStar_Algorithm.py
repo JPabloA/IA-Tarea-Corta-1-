@@ -51,7 +51,21 @@ class AStar_Algorithm(PegSolitaire):
 
     def ReconstructPath(self, current: AStar_Node):
         pass
-
+    
+    def rootNodeMD (self, matrix):
+        m = len(matrix)
+        n = len(matrix[1])
+        centre = (m // 2, n // 2)
+        total = 0
+        
+        for row in range(m):
+            for column in range(n):
+                if (matrix[row][column] != -1):
+                    total += abs(row - centre[0]) + abs (column - centre[1])
+        
+        print("The MD is: ", total)
+        return total
+    
     def A_Star(self):
 
         # Set the initial and goal states
@@ -59,7 +73,7 @@ class AStar_Algorithm(PegSolitaire):
         goalState = self.GetObjetiveMatrix()
 
         current = None
-        initial_h = 88
+        initial_h = self.rootNodeMD(initialState)
         initial_g = 0
 
         # Create open and close list variables
@@ -111,6 +125,4 @@ class AStar_Algorithm(PegSolitaire):
         print("Recorrido:")
         for state in foundPath:
             self.PrintGame( state )
-
-
 
