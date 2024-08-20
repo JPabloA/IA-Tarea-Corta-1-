@@ -4,9 +4,9 @@ from PegSolitaire import PegSolitaire, PieceLocation, Piece, PieceInMap
 import random
 
 class AStar_Node():
-    def __init__(self, game_state: NDArray, parent, g_value: int, h_value: int) -> None:
+    def __init__(self, game_state: NDArray, parent_node, g_value: int, h_value: int) -> None:
         self.game_state = game_state.copy()
-        self.parent = parent
+        self.parent_node = parent_node
 
         self.g_value = g_value
         self.h_value = h_value
@@ -102,9 +102,10 @@ class AStar_Algorithm(PegSolitaire):
             # openList.remove(current)
 
         foundPath = []
-        while current.parent != None:
+        while current.parent_node != None:
             foundPath.append( current.game_state )
-            current = current.parent
+            current = current.parent_node
+        foundPath.append( initialState )
         foundPath.reverse()
 
         print("Recorrido:")
