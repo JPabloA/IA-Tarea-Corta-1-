@@ -46,6 +46,7 @@ class PegSolitaire:
         # Fill the matrix with 1 in the center
         self.goalMatrix[3, 3] = 1
 
+
     def __initializeGameMatrix(self):
         # Create the instances of Ficha and store them in the dictionary
         for i in range(self.goalMatrix.shape[0]):
@@ -124,7 +125,7 @@ class PegSolitaire:
         left_location  = (y, x - 2)
         right_location = (y, x + 2)
 
-        return [ up_location, right_location, down_location, left_location ]
+        return [ up_location, down_location, right_location, left_location ]
 
     def GetObjetiveMatrix(self):
         return self.goalMatrix

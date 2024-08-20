@@ -38,10 +38,6 @@ class AStar_Algorithm(PegSolitaire):
 
                         next_game_board = self.MakeMove(x, y, coord_destiny_x, coord_destiny_y, current_game_state.copy())
                         if (next_game_board is not None):
-                            # print((x, y), "---\n")
-                            # self.PrintGame( next_game_board )
-                            # print("\n\n")
-
                             new_gValue = current.g_value + 1
                             new_hValue = current.h_value
 
@@ -62,6 +58,7 @@ class AStar_Algorithm(PegSolitaire):
         initialState = self.GetGameMatrix()
         goalState = self.GetObjetiveMatrix()
 
+        current = None
         initial_h = 88
         initial_g = 0
 
@@ -71,10 +68,17 @@ class AStar_Algorithm(PegSolitaire):
         ]
         closeList: list[ NDArray ] = []
 
+        itern = 0
         while True:
             # 1. Get the selected node based on the f_value
-            current = min(openList, key=lambda node: node.f_value)
+            # current = min(openList, key=lambda node: node.f_value)
+            current = openList.pop()
+            print("Iteraciones:", itern)
+            itern += 1
             # self.PrintGame( current.game_state )
+            # print("Open list:", len(openList))
+            # print("close list:", len(closeList))
+            # print("G value:", current.g_value)
 
             # 2. Check if in the selected node, the MapState is equal to the goal
             if (np.array_equal(goalState, current.game_state)):
@@ -84,7 +88,7 @@ class AStar_Algorithm(PegSolitaire):
 
             # 3. Check if the game state already have been explored
             if any(np.array_equal(current.game_state, arr) for arr in closeList):
-                openList.remove(current)
+                # openList.remove(current)
                 continue
 
             # 4. Explore next possible movement based on the current state
@@ -95,11 +99,17 @@ class AStar_Algorithm(PegSolitaire):
 
             # 5. Add current to the close list and remove it from the open
             closeList.append(current.game_state)
-            openList.remove(current)
+            # openList.remove(current)
 
-        # print(openList[0].)
-        print("Termino")
+        foundPath = []
+        while current.parent != None:
+            foundPath.append( current.game_state )
+            current = current.parent
+        foundPath.reverse()
 
+        print("Recorrido:")
+        for state in foundPath:
+            self.PrintGame( state )
 
 
 
