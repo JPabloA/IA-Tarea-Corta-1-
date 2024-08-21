@@ -113,8 +113,6 @@ class AStar_Algorithm(PegSolitaire):
             # 1. Get the selected node based on the f_value
             # current = min(openList, key=lambda node: node.f_value)
             current = openList.pop()
-            itern += 1
-            print("Iteraciones:", itern)
 
             # 2. Check if in the selected node, the MapState is equal to the goal
             if (np.array_equal(goalState, current.game_state)):
