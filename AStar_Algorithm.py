@@ -148,7 +148,7 @@ class AStar_Algorithm(PegSolitaire):
         """
         m = len(matrix)
         n = len(matrix[1])
-        centre = (m // 2, n // 2)
+        centre = (self.CENTER_X, self.CENTER_Y)
         total = 0
 
         for row in range(m):
@@ -168,6 +168,8 @@ class AStar_Algorithm(PegSolitaire):
         initialState = self.GetGameMatrix()
         goalState = self.GetObjetiveMatrix()
 
+        self.PrintGame(initialState)
+        self.PrintGame(goalState)
         current: AStar_Node = None
         initial_h = self.rootNodeMD(initialState)
         initial_g = 0
@@ -181,8 +183,8 @@ class AStar_Algorithm(PegSolitaire):
         itern = 0
         while True:
             # 1. Get the selected node based on the f_value
-            current = min(openList, key=lambda node: node.f_value)
-            #current = openList.pop()
+            #current = min(openList, key=lambda node: node.f_value)
+            current = openList.pop()
 
             # 2. Check if in the selected node, the MapState is equal to the goal
             if (np.array_equal(goalState, current.game_state)):
