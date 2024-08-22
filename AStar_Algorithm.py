@@ -1,11 +1,20 @@
 import numpy as np
 from numpy.typing import NDArray
-from PegSolitaire import PegSolitaire, PieceLocation, Piece, PieceInMap
-import heapq
+from PegSolitaire import PegSolitaire
 
 # https://en.wikipedia.org/wiki/A*_search_algorithm
 
 class AStar_Node():
+    """
+    Class representing a node in the A* algorithm.
+
+    Attributes:
+        game_state (NDArray): The game state at this node.
+        parent_node (AStar_Node): The parent node of this node.
+        g_value (int): The cost from the start node to this node.
+        h_value (int): The estimated cost from this node to the goal node.
+        f_value (int): The sum of g_value and h_value.
+    """
     def __init__(self, game_state: NDArray, parent_node, g_value: int, h_value: int) -> None:
         self.game_state = game_state.copy()
         self.parent_node = parent_node
@@ -15,11 +24,51 @@ class AStar_Node():
         self.f_value = self.g_value + self.h_value
 
 class AStar_Algorithm(PegSolitaire):
+    """
+    Class implementing the A* algorithm for the Peg Solitaire game.
+
+    Methods:
+        __calculateHeuristic(x: int, y: int) -> int:
+            Calculates the heuristic value based on the Manhattan distance from a given coordinate to the center of the board.
+        
+        __generateNode(current_piece_coord: tuple[int, int], next_position_coord: tuple[int, int], current_node: AStar_Node) -> AStar_Node:
+            Generates a new node based on moving a piece from a current coordinate to a destination coordinate.
+        
+        __findPossibleNextMove(current_node: AStar_Node) -> list[AStar_Node]:
+            Finds all possible next moves from the current node.
+        
+        rootNodeMD(matrix: NDArray) -> int:
+            Calculates the total Manhattan distance from all pieces to the center of the board.
+        
+        A_Star():
+            Implements the A* algorithm to find the solution to the Peg Solitaire game.
+    """
 
     def __calculateHeuristic(self, x: int, y: int):
+        """
+        Calculates the heuristic value based on the Manhattan distance from a given coordinate to the center of the board.
+
+        Parameters:
+            x (int): The x coordinate.
+            y (int): The y coordinate.
+
+        Returns:
+            int: The heuristic value.
+        """
         return abs( self.CENTER_Y - y ) + abs( self.CENTER_X - x )
 
     def __generateNode(self, current_piece_coord: tuple[int, int], next_position_coord: tuple[int, int], current_node: AStar_Node):
+        """
+        Generates a new node based on moving a piece from a current coordinate to a destination coordinate.
+
+        Parameters:
+            current_piece_coord (tuple[int, int]): Coordinates of the current piece.
+            next_position_coord (tuple[int, int]): Coordinates of the destination position.
+            current_node (AStar_Node): The current node.
+
+        Returns:
+            AStar_Node: The newly generated node.
+        """
         coord_destiny_x = next_position_coord[1]
         coord_destiny_y = next_position_coord[0]
 
@@ -44,7 +93,15 @@ class AStar_Algorithm(PegSolitaire):
         return None
 
     def __findPossibleNextMove(self, current_node: AStar_Node) -> list[ AStar_Node ]:
+        """
+        Finds all possible next moves from the current node.
 
+        Parameters:
+            current_node (AStar_Node): The current node.
+
+        Returns:
+            list[AStar_Node]: A list of possible next nodes.
+        """
         result = []
         current_game_state = current_node.game_state
 
@@ -79,6 +136,15 @@ class AStar_Algorithm(PegSolitaire):
         return result
 
     def rootNodeMD (self, matrix):
+        """
+        Calculates the total Manhattan distance from all pieces to the center of the board.
+
+        Parameters:
+            matrix (NDArray): The game board matrix.
+
+        Returns:
+            int: The total Manhattan distance.
+        """
         m = len(matrix)
         n = len(matrix[1])
         centre = (m // 2, n // 2)
@@ -93,6 +159,10 @@ class AStar_Algorithm(PegSolitaire):
         return total
 
     def A_Star(self):
+        """
+        Implements the A* algorithm to find the solution to the Peg Solitaire game.
+
+        """
 
         # Set the initial and goal states
         initialState = self.GetGameMatrix()

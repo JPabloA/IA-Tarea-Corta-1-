@@ -1,18 +1,28 @@
 import numpy as np
 from numpy.typing import NDArray
-from Piece import Piece
 
-PieceLocation = tuple[int, int]
-PieceObject = tuple[PieceLocation, Piece]
-PieceInMap = dict[PieceLocation, Piece]
 
 class PegSolitaire:
+    """
+    Class representing the Peg Solitaire game.
 
+    Attributes:
+        GAME_SIZE (int): The size of the game board.
+        CENTER_X (int): The x-coordinate of the center of the board.
+        CENTER_Y (int): The y-coordinate of the center of the board.
+        game_board (NDArray): The current state of the game board.
+    """
     GAME_SIZE = 7
     CENTER_X = 3
     CENTER_Y = 3
 
     def __init__(self):
+        """
+        Initializes the PegSolitaire game with a given board size.
+
+        Parameters:
+            game_size (int): The size of the game board.
+        """
         self.__initializeObjectiveMatrix()
 
     def __initializeMatrixCorners(self, matrix: NDArray):
@@ -40,6 +50,10 @@ class PegSolitaire:
         return matrix
 
     def __initializeObjectiveMatrix(self):
+        """
+        Initializes the objective matrix for the game. 
+        The objective matrix represents the goal state of the game.
+        """
         # Create a 7x7 matrix to represent the goal state
         self.goalMatrix = np.zeros((self.GAME_SIZE, self.GAME_SIZE),dtype=object)
         self.goalMatrix = self.__initializeMatrixCorners(self.goalMatrix)
@@ -48,6 +62,11 @@ class PegSolitaire:
         self.goalMatrix[self.CENTER_Y, self.CENTER_X] = 1
 
     def PrintGame(self, game_board: NDArray):
+        """
+        Prints the current state of the game board.
+        Args:
+            game_board (NDArray): The current state of the game board.
+        """
         temp_matrix = np.zeros((self.GAME_SIZE, self.GAME_SIZE), dtype=object)
         temp_matrix = self.__initializeMatrixCorners(temp_matrix)
 
@@ -66,12 +85,37 @@ class PegSolitaire:
         print(game_row_str)
 
     def GetPieceInBetween(self, x_from: int, y_from: int, x_to: int, y_to: int):
+        """
+        Gets the coordinates of the piece between two given coordinates.
+
+        Parameters:
+            x1 (int): The x-coordinate of the first position.
+            y1 (int): The y-coordinate of the first position.
+            x2 (int): The x-coordinate of the second position.
+            y2 (int): The y-coordinate of the second position.
+
+        Returns:
+            tuple[int, int]: The coordinates of the piece in between.
+        """
         target_x = x_from if x_from == x_to else (x_from + x_to) // 2
         target_y = y_from if y_from == y_to else (y_from + y_to) // 2
 
         return ( target_y, target_x )
 
     def MakeMove(self, x_from: int, y_from: int, x_to: int, y_to: int, game_board: NDArray):
+        """
+        Makes a move on the board by moving a piece from one position to another.
+
+        Parameters:
+            x1 (int): The x-coordinate of the starting position.
+            y1 (int): The y-coordinate of the starting position.
+            x2 (int): The x-coordinate of the destination position.
+            y2 (int): The y-coordinate of the destination position.
+            board (NDArray): The current state of the game board.
+
+        Returns:
+            NDArray: The new state of the game board after the move, or None if the move is invalid.
+        """
         # Check if the to location is in bounds
         if (x_to < 0 or x_to >= self.GAME_SIZE or
             y_to < 0 or y_to >= self.GAME_SIZE or
@@ -108,6 +152,18 @@ class PegSolitaire:
         return game_board
 
     def GetPiecePossibleNextPositions(self, x: int, y: int) -> list[tuple[int, int]] :
+        """
+        Gets the possible next positions for a piece at a given coordinate.
+        Looks for the possible moves in the up, down, right and left directions with a distance of 2.
+
+        Parameters:
+            x (int): The x-coordinate of the piece.
+            y (int): The y-coordinate of the piece.
+
+        Returns:
+            list[tuple[int, int]]: A list of possible next positions. 
+            Index of array 0: Up, 1: Down, 2: Right, 3: Left
+        """
         up_location    = (y - 2, x)
         down_location  = (y + 2, x)
         right_location = (y, x + 2)
@@ -116,23 +172,25 @@ class PegSolitaire:
         return [ up_location, down_location, right_location, left_location ]
 
     def GetObjetiveMatrix(self):
+        """
+        Gets the objective matrix for
+
+        Returns:
+            NDArray: The objective matrix for the game.
+        """
         return self.goalMatrix
 
     def GetGameMatrix(self):
+        """
+        Gets the current state of the game board.
+
+        Returns:
+            NDArray: The current state of the game board.
+        """
         game_matrix = np.ones((self.GAME_SIZE, self.GAME_SIZE), dtype=object)
         game_matrix = self.__initializeMatrixCorners( game_matrix )
 
         # Fill the matrix with 0 in the center
         game_matrix[3, 3] = 0
-
-        return game_matrix
-
-    # Return a NPArray based on the current piece dictionary
-    def GenerateGameStateMatrix(self, pieces: PieceInMap):
-        game_matrix = np.zeros((self.GAME_SIZE, self.GAME_SIZE),dtype=object)
-        self.__initializeMatrixCorners(game_matrix)
-
-        for location in pieces:
-            game_matrix[location] = 1
 
         return game_matrix
