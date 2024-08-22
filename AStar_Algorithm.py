@@ -110,10 +110,11 @@ class AStar_Algorithm(PegSolitaire):
 
         for _ in range(self.GAME_SIZE * self.GAME_SIZE):
 
-            if current_game_state[y, x] == 1:
-
+            if current_game_state[y, x] == 1: 
+                
                 possible_moves = self.GetPiecePossibleNextPositions(x, y)
 
+                #Each piece has 4 possible moves (up, down, left, right)
                 node1 = self.__generateNode( (x, y), possible_moves[0], current_node )
                 node2 = self.__generateNode( (x, y), possible_moves[1], current_node )
                 node3 = self.__generateNode( (x, y), possible_moves[2], current_node )
@@ -161,7 +162,6 @@ class AStar_Algorithm(PegSolitaire):
     def A_Star(self):
         """
         Implements the A* algorithm to find the solution to the Peg Solitaire game.
-
         """
 
         # Set the initial and goal states
@@ -181,8 +181,8 @@ class AStar_Algorithm(PegSolitaire):
         itern = 0
         while True:
             # 1. Get the selected node based on the f_value
-            # current = min(openList, key=lambda node: node.f_value)
-            current = openList.pop()
+            current = min(openList, key=lambda node: node.f_value)
+            #current = openList.pop()
 
             # 2. Check if in the selected node, the MapState is equal to the goal
             if (np.array_equal(goalState, current.game_state)):
@@ -204,7 +204,7 @@ class AStar_Algorithm(PegSolitaire):
 
             # 5. Add current to the close list and remove it from the open
             closeList.add(state_tuple)
-            # openList.remove(current)
+            #openList.remove(current)
 
         foundPath = []
         while current.parent_node != None:
