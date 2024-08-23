@@ -12,14 +12,19 @@ class PegSolitaire:
         game_board (NDArray): The current state of the game board.
     """
     # Classic board
-    # GAME_SIZE = 7
-    # CENTER_X = 3
-    # CENTER_Y = 3
+    GAME_SIZE = 7
+    CENTER_X = 3
+    CENTER_Y = 3
 
     # Square board
-    GAME_SIZE = 6
-    CENTER_X = 3
-    CENTER_Y = 2
+    #GAME_SIZE = 6
+    #CENTER_X = 3
+    #CENTER_Y = 2
+
+    # German board
+    # GAME_SIZE = 9
+    # CENTER_X = 4
+    # CENTER_Y = 4
 
     def __init__(self):
         """
@@ -54,6 +59,52 @@ class PegSolitaire:
 
         return matrix
 
+    # Fill the matrix with -1 in the border (German board)
+    def __initializeMatrixCornersG(self, matrix: NDArray):
+        matrix[0, 0] = -1
+        matrix[0, 1] = -1
+        matrix[0, 2] = -1
+        matrix[0, -1] = -1
+        matrix[0, -2] = -1
+        matrix[0, -3] = -1
+
+        matrix[-1, 0] = -1
+        matrix[-1, 1] = -1
+        matrix[-1, 2] = -1
+        matrix[-1, -1] = -1
+        matrix[-1, -2] = -1
+        matrix[-1, -3] = -1
+
+        matrix[1, 0] = -1
+        matrix[1, 1] = -1
+        matrix[1, 2] = -1
+        matrix[1, -1] = -1
+        matrix[1, -2] = -1
+        matrix[1, -3] = -1
+
+        matrix[-2, 0] = -1
+        matrix[-2, 1] = -1
+        matrix[-2, 2] = -1
+        matrix[-2, -1] = -1
+        matrix[-2, -2] = -1
+        matrix[-2, -3] = -1
+
+        matrix[2, 0] = -1
+        matrix[2, 1] = -1
+        matrix[2, 2] = -1
+        matrix[2, -1] = -1
+        matrix[2, -2] = -1
+        matrix[2, -3] = -1
+
+        matrix[-3, 0] = -1
+        matrix[-3, 1] = -1
+        matrix[-3, 2] = -1
+        matrix[-3, -1] = -1
+        matrix[-3, -2] = -1
+        matrix[-3, -3] = -1
+
+        return matrix
+
     # Create a 7x7 matrix to represent the goal state
     def __initializeObjectiveMatrix(self):
         """
@@ -61,7 +112,8 @@ class PegSolitaire:
         The objective matrix represents the goal state of the game.
         """
         self.goalMatrix = np.zeros((self.GAME_SIZE, self.GAME_SIZE),dtype=object)
-        # self.goalMatrix = self.__initializeMatrixCorners(self.goalMatrix)
+        self.goalMatrix = self.__initializeMatrixCorners(self.goalMatrix)
+        # self.goalMatrix = self.__initializeMatrixCornersG(self.goalMatrix)
 
         # Set the only piece in the center of the matrix
         self.goalMatrix[self.CENTER_Y, self.CENTER_X] = 1
@@ -205,7 +257,8 @@ class PegSolitaire:
             NDArray: The current state of the game board.
         """
         game_matrix = np.ones((self.GAME_SIZE, self.GAME_SIZE), dtype=object)
-        # game_matrix = self.__initializeMatrixCorners( game_matrix )
+        game_matrix = self.__initializeMatrixCorners( game_matrix )
+        # game_matrix = self.__initializeMatrixCornersG( game_matrix )
 
         # Fill the matrix with 0 in the center
         game_matrix[self.CENTER_Y, self.CENTER_X] = 0

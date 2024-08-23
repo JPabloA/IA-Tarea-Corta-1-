@@ -1,6 +1,7 @@
 import time
 import pandas as pd
 import matplotlib.pyplot as plt
+from AStar_Algorithm import AStar_Algorithm
 
 algorithm = AStar_Algorithm()
 
@@ -56,4 +57,4 @@ def display_graph():
 
 print_execution_time(execution_time)
 print("--------------------------------")
-display_graph()
+# display_graph()
